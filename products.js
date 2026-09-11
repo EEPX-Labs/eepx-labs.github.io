@@ -71,7 +71,7 @@ const products = [
             "JavaScript (ES6)"
         ],
         downloadLink: "#",
-        demoLink: "https://your-demo-link.com",
+        demoLink: "https://aurora-saas.vercel.app/",
     },
         {
         id: "nexora-digital-agency-template",
