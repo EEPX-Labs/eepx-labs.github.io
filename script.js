@@ -14,7 +14,7 @@ const faqs = [
     }
 ];
 
-// دالة عرض المنتجات في الجريد
+// دالة عرض المنتجات في الجريد (مرتبطة بـ images[0])
 function renderProducts(itemsToDisplay) {
     const grid = document.getElementById('products-grid');
     if (!grid) return;
@@ -29,30 +29,58 @@ function renderProducts(itemsToDisplay) {
         return;
     }
 
-    grid.innerHTML = itemsToDisplay.map(product => `
-        <div onclick="window.location.href='product.html?id=${product.id}'" class="product-card group cursor-pointer">
-            <div class="card-image-container h-48 bg-slate-950/55 relative flex items-center justify-center border-b border-slate-800/60">
-                <span class="absolute top-3 right-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md">
-                    ${product.badge}
-                </span>
-                <img src="${product.image}" alt="${product.title}" class="max-h-32 w-auto object-contain drop-shadow-lg" onerror="this.src='logo_darkmode.png'">
-            </div>
-            <div class="p-6 flex flex-col flex-grow">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs uppercase font-bold tracking-wider text-slate-500">${product.subCategory}</span>
-                    <span class="text-cyan-400 font-extrabold text-lg">${product.price}</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">${product.title}</h3>
-                <p class="text-slate-400 text-sm mb-6 flex-grow leading-relaxed">${product.shortDesc}</p>
-                <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-cyan-400 font-bold text-xs">
-                    <span class="flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
-                        Explore Project & Pricing <i class="fa-solid fa-arrow-right"></i>
+    grid.innerHTML = itemsToDisplay.map(product => {
+        // الاعتماد المباشر على الصورة الأولى من مصفوفة images
+        const mainImage = (product.images && product.images.length > 0) ? product.images[0] : (product.image || 'logo_darkmode.png');
+
+        return `
+            <div onclick="window.location.href='product.html?id=${product.id}'" class="product-card group cursor-pointer">
+                <div class="card-image-container h-48 bg-slate-950/55 relative flex items-center justify-center border-b border-slate-800/60">
+                    <span class="absolute top-3 right-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md">
+                        ${product.badge}
                     </span>
-                    <span class="text-slate-500 text-[11px] font-normal">Details</span>
+                    <img src="${mainImage}" alt="${product.title}" class="max-h-32 w-auto object-contain drop-shadow-lg" onerror="this.src='logo_darkmode.png'">
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs uppercase font-bold tracking-wider text-slate-500">${product.subCategory}</span>
+                        <span class="text-cyan-400 font-extrabold text-lg">${product.price}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">${product.title}</h3>
+                    <p class="text-slate-400 text-sm mb-6 flex-grow leading-relaxed">${product.shortDesc}</p>
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-cyan-400 font-bold text-xs">
+                        <span class="flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
+                            Explore Project & Pricing <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                        <span class="text-slate-500 text-[11px] font-normal">Details</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
+}
+
+// دالة نسخ الكود البرمجي من الـ CLI
+function copyCodeSnippet(button) {
+    const parent = button.closest('.relative');
+    const codeBlock = parent.querySelector('.code-block');
+    if (!codeBlock) return;
+
+    const textToCopy = Array.from(codeBlock.querySelectorAll('p'))
+        .map(p => p.innerText)
+        .filter(text => !text.startsWith('#'))
+        .join('\n');
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = button.innerHTML;
+        button.innerHTML = `<i class="fa-solid fa-check text-cyan-400"></i> Copied!`;
+        button.classList.add('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/40');
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/40');
+        }, 2000);
+    });
 }
 
 // دالة عرض الـ FAQ
@@ -85,15 +113,14 @@ function toggleFaq(index) {
     }
 }
 
-// تهيئة الأحداث والتشغيل عند تحميل الصفحة
+// التهيئة والتشغيل
 document.addEventListener('DOMContentLoaded', () => {
-    // التأكد من تحميل البيانات وإرسالها للدوال
     if (typeof products !== 'undefined') {
         renderProducts(products);
     }
     renderFaqs();
 
-    // فلترة المنتجات حسب التصنيف
+    // فلترة المنتجات
     const filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -130,15 +157,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // زر العودة للأعلى
     const backToTopBtn = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
-        } else {
-            backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
-        }
-    });
-
     if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+            }
+        });
+
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });

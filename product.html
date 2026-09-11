@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Product Details | EEPX Labs</title>
+    
+    <!-- Dynamic OpenGraph Tags -->
+    <meta property="og:title" content="EEPX Labs Digital Product">
+    <meta property="og:type" content="website">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -43,7 +48,7 @@
         </footer>
     </div>
 
-    <!-- نافذة تكبير الصورة المنبثقة (Image Zoom Modal) -->
+    <!-- نافذة تكبير الصورة المنبثقة -->
     <div id="zoom-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 cursor-zoom-out" onclick="closeZoomModal()">
         <button class="absolute top-6 right-6 text-slate-400 hover:text-white text-3xl w-12 h-12 flex items-center justify-center bg-slate-900/80 rounded-full border border-slate-800 transition-all">
             <i class="fa-solid fa-xmark"></i>
@@ -83,7 +88,6 @@
             }
         }
 
-        // دوال فتح وإغلاق الزوم
         function openZoomModal() {
             if (activeProductImages.length === 0) return;
             const modal = document.getElementById('zoom-modal');
@@ -91,7 +95,7 @@
             zoomedImg.src = activeProductImages[currentImageIndex];
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            document.body.style.overflow = 'hidden'; // منع سكرول الصفحة والوراء مفتوح
+            document.body.style.overflow = 'hidden';
         }
 
         function closeZoomModal() {
@@ -125,11 +129,12 @@
 
             document.getElementById('page-title').innerText = `${product.title} | EEPX Labs`;
             
+            // اعتماد القراءة من مصفوفة images بشكل أساسي
             activeProductImages = product.images && product.images.length > 0 ? product.images : [product.image || 'logo_darkmode.png'];
             currentImageIndex = 0;
 
             container.innerHTML = `
-                <!-- 1. Hero Section -->
+                <!-- 1. Header Details -->
                 <div class="bg-gradient-to-b from-slate-900/80 to-slate-900/30 border border-slate-800/80 rounded-3xl p-8 lg:p-10 mb-6 backdrop-blur-xl relative overflow-hidden shadow-2xl">
                     <div class="flex flex-wrap items-center gap-3 mb-4">
                         <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold px-3 py-1 rounded-full">
@@ -141,32 +146,31 @@
                     <h1 class="text-3xl lg:text-5xl font-black text-white tracking-tight leading-tight">${product.title}</h1>
                 </div>
 
-                <!-- 2. بطاقة الوصف المختصر -->
+                <!-- 2. Overview -->
                 <div class="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-6 mb-8 backdrop-blur-md">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Quick Overview</h3>
                     <p class="text-slate-200 text-base lg:text-lg leading-relaxed">${product.shortDesc}</p>
                 </div>
 
-                <!-- 3. بطاقة السعر وزر الشراء -->
+                <!-- 3. Price Card -->
                 <div class="bg-slate-900/80 border border-cyan-500/30 rounded-3xl p-6 lg:p-8 mb-10 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl shadow-cyan-500/5">
                     <div class="flex items-center gap-4 text-center sm:text-left">
                         <span class="text-4xl lg:text-5xl font-black text-white">${product.price}</span>
                         <div class="text-xs text-slate-400 space-y-1">
-                            <p class="text-slate-200 font-semibold"><i class="fa-solid fa-shield-check text-cyan-400 mr-1"></i> Secure Checkout</p>
-                            <p>Instant Download & Lifetime Access</p>
+                            <p class="text-slate-200 font-semibold"><i class="fa-solid fa-shield-check text-cyan-400 mr-1"></i> Instant Delivery</p>
+                            <p>Lifetime Minor Updates Included</p>
                         </div>
                     </div>
-                    <a href="${product.downloadLink}" class="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-4 px-8 rounded-2xl transition-all shadow-lg shadow-cyan-500/25 text-base flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-bag-shopping"></i> Purchase License (${product.price})
+                    <a href="${product.downloadLink}" class="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-400 text-white font-black py-4 px-8 rounded-2xl transition-all shadow-lg shadow-cyan-500/25 text-base flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bag-shopping"></i> Get License (${product.price})
                     </a>
                 </div>
 
-                <!-- 4. معرض الصور مع خاصية النقر للزووم -->
+                <!-- 4. Image Gallery -->
                 <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 mb-10 relative shadow-inner group">
                     <div class="relative h-[380px] lg:h-[450px] flex items-center justify-center overflow-hidden rounded-2xl bg-slate-900/40">
                         <img id="active-product-img" src="${activeProductImages[0]}" alt="${product.title}" class="max-h-full max-w-full object-contain transition-opacity duration-150 drop-shadow-2xl cursor-zoom-in hover:scale-[1.01] transition-transform" onclick="openZoomModal()" title="Click to zoom image" onerror="this.src='logo_darkmode.png'">
                         
-                        <!-- إيقونة توضيحية للزووم -->
                         <div class="absolute top-4 right-4 bg-slate-900/80 border border-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-lg pointer-events-none flex items-center gap-1.5 shadow-md">
                             <i class="fa-solid fa-magnifying-glass-plus text-cyan-400"></i> Click to zoom
                         </div>
@@ -185,7 +189,7 @@
                     </div>
                 </div>
 
-                <!-- 5. تفاصيل المنتج والمميزات -->
+                <!-- 5. Details & Features Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
                     <div class="lg:col-span-7 space-y-8">
                         <div class="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-8 backdrop-blur-md">
@@ -194,7 +198,19 @@
                             </h3>
                             <p class="text-slate-300 text-base leading-relaxed">${product.fullDesc}</p>
                         </div>
+
                         ${product.customContent ? product.customContent : ''}
+
+                        ${product.changelog ? `
+                            <div class="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-8 backdrop-blur-md">
+                                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-code-commit text-cyan-400"></i> Changelog
+                                </h3>
+                                <ul class="space-y-2 text-xs font-mono text-slate-300">
+                                    ${product.changelog.map(log => `<li class="border-b border-slate-800/60 pb-2 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>${log}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
                     </div>
 
                     <div class="lg:col-span-5 space-y-6">
