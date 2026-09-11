@@ -11,8 +11,8 @@ const projectsData = [
         image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
         description: "Advanced intelligence desktop application for real-time document analysis and OCR parsing.",
         tags: ["Python", "FastAPI", "OCR"],
-        buyUrl: "https://gumroad.com", // ضع رابط الشراء هنا
-        demoUrl: "https://github.com/eepx-labs" // ضع رابط التفاصيل أو جيت هاب هنا
+        buyUrl: "https://gumroad.com",
+        demoUrl: "https://github.com/eepx-labs"
     },
     {
         id: 2,
