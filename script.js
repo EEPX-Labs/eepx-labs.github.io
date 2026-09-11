@@ -30,17 +30,23 @@ function renderProducts(itemsToDisplay) {
     }
 
     grid.innerHTML = itemsToDisplay.map(product => {
-        // الاعتماد المباشر على الصورة الأولى من مصفوفة images
         const mainImage = (product.images && product.images.length > 0) ? product.images[0] : (product.image || 'logo_darkmode.png');
 
         return `
             <div onclick="window.location.href='product.html?id=${product.id}'" class="product-card group cursor-pointer">
-                <div class="card-image-container h-48 bg-slate-950/55 relative flex items-center justify-center border-b border-slate-800/60">
-                    <span class="absolute top-3 right-3 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md">
+                
+                <!-- حاوية الصورة المعدلة -->
+                <div class="card-image-container h-52 bg-slate-950/80 relative flex items-center justify-center border-b border-slate-800/60 overflow-hidden">
+                    
+                    <!-- إضافة z-10 وزيادة التباين عشان تظهر الشارة فوق الصورة دائماً -->
+                    <span class="absolute top-3 right-3 z-10 bg-slate-900/90 border border-cyan-500/40 text-cyan-400 text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md shadow-md">
                         ${product.badge}
                     </span>
-                    <img src="${mainImage}" alt="${product.title}" class="max-h-32 w-auto object-contain drop-shadow-lg" onerror="this.src='logo_darkmode.png'">
+
+                    <!-- تعديل الـ Classes لتعرض الصورة بكامل العرض والارتفاع وبشكل متناسق -->
+                    <img src="${mainImage}" alt="${product.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='logo_darkmode.png'">
                 </div>
+
                 <div class="p-6 flex flex-col flex-grow">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs uppercase font-bold tracking-wider text-slate-500">${product.subCategory}</span>
