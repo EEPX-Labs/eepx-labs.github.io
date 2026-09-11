@@ -34,19 +34,12 @@ function renderProducts(itemsToDisplay) {
 
         return `
             <div onclick="window.location.href='product.html?id=${product.id}'" class="product-card group cursor-pointer">
-                
-                <!-- حاوية الصورة المعدلة -->
                 <div class="card-image-container h-52 bg-slate-950/80 relative flex items-center justify-center border-b border-slate-800/60 overflow-hidden">
-                    
-                    <!-- إضافة z-10 وزيادة التباين عشان تظهر الشارة فوق الصورة دائماً -->
                     <span class="absolute top-3 right-3 z-10 bg-slate-900/90 border border-cyan-500/40 text-cyan-400 text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md shadow-md">
                         ${product.badge}
                     </span>
-
-                    <!-- تعديل الـ Classes لتعرض الصورة بكامل العرض والارتفاع وبشكل متناسق -->
                     <img src="${mainImage}" alt="${product.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='logo_darkmode.png'">
                 </div>
-
                 <div class="p-6 flex flex-col flex-grow">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs uppercase font-bold tracking-wider text-slate-500">${product.subCategory}</span>
@@ -54,11 +47,18 @@ function renderProducts(itemsToDisplay) {
                     </div>
                     <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">${product.title}</h3>
                     <p class="text-slate-400 text-sm mb-6 flex-grow leading-relaxed">${product.shortDesc}</p>
-                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-cyan-400 font-bold text-xs">
-                        <span class="flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
-                            Explore Project & Pricing <i class="fa-solid fa-arrow-right"></i>
+                    
+                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                        <span class="text-cyan-400 font-bold text-xs flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
+                            Details <i class="fa-solid fa-arrow-right"></i>
                         </span>
-                        <span class="text-slate-500 text-[11px] font-normal">Details</span>
+
+                        <!-- زر Live Demo يظهر فقط لو المنتج Web Template ولديه demoLink -->
+                        ${product.demoLink ? `
+                            <a href="${product.demoLink}" target="_blank" onclick="event.stopPropagation()" class="bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 text-xs font-bold px-3 py-1.5 rounded-lg transition-all border border-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Live Demo
+                            </a>
+                        ` : ''}
                     </div>
                 </div>
             </div>

@@ -2,17 +2,14 @@
 const products = [
     {
         id: "eagle-fortify-tool",
-        title: "Eagle Fortify Tool",
+        title: "Eagle Fortify Tool - Local Password & Security Utility",
         category: "software",
         subCategory: "security",
         price: "$5",
         badge: "v3.1 Stable",
         images: [
-            "images/EFT_GH_Background.jpg",
-            "images/EFT_GH_Preview_1.PNG",
-            "images/EFT_GH_Preview_2.PNG",
-            "images/EFT_GH_Preview_3.PNG",
-            "images/EFT_GH_Preview_4.PNG"
+            "https://github.com/EEPX-Labs/Projects-Backgrounds/blob/main/Previews/EFT_GH_Background.jpg?raw=true",
+            "product2.png"
         ],
         shortDesc: "Local password utility, secure passphrase generator, and private encrypted vault running 100% offline.",
         fullDesc: "Eagle Fortify Tool is a robust local password utility designed for privacy and security. It generates strong passwords, checks password strength, creates secure passphrases and email identities, and secures your credentials inside a private encrypted vault. Everything runs locally on your device with zero cloud sync or backdoors.",
@@ -42,7 +39,8 @@ const products = [
                 </div>
             </div>
         `,
-        downloadLink: "#"
+        downloadLink: "#",
+        demoLink: "https://your-demo-link.com"
     },
     {
         id: "basira-desktop",
