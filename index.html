@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EEPX Labs | Software Store & Showcase</title>
 
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -30,10 +33,9 @@
         <!-- Header / Navbar -->
         <header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/70 border-b border-slate-800/80">
             <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                <!-- Brand Logo & Name -->
                 <a href="#" class="flex items-center gap-3 font-extrabold text-2xl tracking-wider text-white group">
-                    <span class="bg-gradient-to-r from-cyan-500 to-blue-600 p-2.5 rounded-xl text-slate-950 font-black transition-transform duration-300 group-hover:scale-110">
-                        <i class="fa-solid fa-cube text-xl"></i>
-                    </span>
+                    <img src="logo.png" alt="EEPX Labs Logo" class="h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
                     EEPX <span class="text-cyan-400">Labs</span>
                 </a>
 
@@ -87,7 +89,7 @@
 
             <!-- Dynamic Product Cards Grid -->
             <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Products will be injected dynamically via script.js -->
+                <!-- Products injected dynamically via script.js -->
             </div>
         </section>
 
