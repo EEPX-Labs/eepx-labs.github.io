@@ -40,50 +40,5 @@ const products = [
         `,
         downloadLink: "#"
     },
-    {
-        id: "basira-desktop",
-        title: "Basira - Personal Desktop Assistant",
-        category: "software",
-        subCategory: "desktop",
-        price: "$29",
-        badge: "v1.0 New",
-        images: [
-            "product2.png"
-        ],
-        shortDesc: "All-in-one personal productivity and workflow management tool for desktop.",
-        fullDesc: "Basira streamlines your daily tasks, manages notes, organizes files, and tracks productivity metrics right from your desktop with lightning-fast performance.",
-        features: ["Smart task manager", "Local database storage", "Customizable widgets", "Dark/Light modes"],
-        downloadLink: "#"
-    },
-    {
-        id: "zulenar-saas",
-        title: "Zulenar - SaaS Web Template",
-        category: "templates",
-        subCategory: "web",
-        price: "$19",
-        badge: "Best Seller",
-        images: [
-            "product3.png"
-        ],
-        shortDesc: "High-performance SaaS landing page template built with Tailwind CSS.",
-        fullDesc: "Zulenar MVP template offers clean architecture, responsive layouts, animated components, and pre-built sections designed specifically for modern tech startups.",
-        features: ["Fully responsive", "Tailwind CSS components", "Fast loading speed", "Easy customization"],
-        downloadLink: "#",
-        demoLink: "https://your-demo-link.com"
-    },
-    {
-        id: "stellar-tools",
-        title: "Stellar AI Studio Pro (Free Utility)",
-        category: "software",
-        subCategory: "free-tools",
-        price: "Free",
-        badge: "Freebie",
-        images: [
-            "product4.png"
-        ],
-        shortDesc: "Free local AI assistant studio connector with streaming SSE responses.",
-        fullDesc: "A lightweight free developer utility designed to test local LLM endpoints, manage prompts, and handle real-time streaming interfaces seamlessly.",
-        features: ["Local LLM support", "SSE streaming", "Open-source codebase", "Zero configuration"],
-        downloadLink: "#"
-    }
+
 ];
