@@ -8,7 +8,6 @@ const products = [
         price: "$5",
         badge: "v3.1",
         images: [
-            "images/EFT_GH_Background.jpg",
             "images/EFT_GH_Preview_1.PNG",
             "images/EFT_GH_Preview_2.PNG",
             "images/EFT_GH_Preview_3.PNG",
