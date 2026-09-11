@@ -39,8 +39,7 @@ const products = [
                 </div>
             </div>
         `,
-        downloadLink: "#",
-        demoLink: "https://your-demo-link.com"
+        downloadLink: "#"
     },
     {
         id: "basira-desktop",
@@ -70,7 +69,8 @@ const products = [
         shortDesc: "High-performance SaaS landing page template built with Tailwind CSS.",
         fullDesc: "Zulenar MVP template offers clean architecture, responsive layouts, animated components, and pre-built sections designed specifically for modern tech startups.",
         features: ["Fully responsive", "Tailwind CSS components", "Fast loading speed", "Easy customization"],
-        downloadLink: "#"
+        downloadLink: "#",
+        demoLink: "https://your-demo-link.com"
     },
     {
         id: "stellar-tools",
