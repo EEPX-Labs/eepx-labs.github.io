@@ -2,7 +2,7 @@
 const products = [
     {
         id: "eagle-fortify-tool",
-        title: "Eagle Fortify Tool - Local Password & Security Utility",
+        title: "Eagle Fortify Tool",
         category: "software",
         subCategory: "security",
         price: "$5",
