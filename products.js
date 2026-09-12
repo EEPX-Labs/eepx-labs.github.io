@@ -45,7 +45,7 @@ const products = [
         title: "Aurora - Premium SaaS Landing Page Template",
         category: "templates",
         subCategory: "web",
-        price: "$29",
+        price: "$15",
         badge: "Best Seller",
         images: [
             "images/AURORA SaaS Showcase.png"
@@ -78,7 +78,7 @@ const products = [
         title: "NEXORA - Premium Digital Agency HTML Template",
         category: "templates",
         subCategory: "web",
-        price: "$29",
+        price: "$15",
         badge: "Best Seller",
         images: [
             "images/Nexora Digital Agency Showcase.png"
