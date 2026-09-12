@@ -114,6 +114,6 @@ const products = [
             </div>
         `,
         downloadLink: "https://eagleeyeprim.gumroad.com/l/nexora-html-template?wanted=true",
-        demoLink: "https://your-demo-link.com",
+        demoLink: "https://nexora-digital-agency-chi.vercel.app/",
     }
 ];
