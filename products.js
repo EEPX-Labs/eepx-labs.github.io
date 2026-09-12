@@ -70,7 +70,7 @@ const products = [
             "CSS3",
             "JavaScript (ES6)"
         ],
-        downloadLink: "#",
+        downloadLink: "https://eagleeyeprim.gumroad.com/l/aurora-html-template?wanted=true",
         demoLink: "https://aurora-saas.vercel.app/",
     },
         {
