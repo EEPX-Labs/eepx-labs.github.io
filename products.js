@@ -113,7 +113,7 @@ const products = [
                 </div>
             </div>
         `,
-        downloadLink: "#",
+        downloadLink: "https://eagleeyeprim.gumroad.com/l/nexora-html-template?wanted=true",
         demoLink: "https://your-demo-link.com",
     }
 ];
