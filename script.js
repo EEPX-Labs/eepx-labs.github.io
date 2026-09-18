@@ -1,4 +1,7 @@
-// الأسئلة الشائعة (FAQ Data)
+/* =========================================================
+   EEPX LABS — Interactions
+   ========================================================= */
+
 const faqs = [
     {
         q: "How do I download my software or templates after purchase?",
@@ -14,166 +17,432 @@ const faqs = [
     }
 ];
 
-// دالة عرض المنتجات في الجريد (مرتبطة بـ images[0])
+const state = {
+    filter: "all",
+    query: "",
+    slide: 0,
+    autoplay: true,
+    autoplayTimer: null
+};
+
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+function escapeHtml(value = "") {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    }[char]));
+}
+
+function getFilteredProducts() {
+    const query = state.query.toLowerCase();
+
+    return products.filter(product => {
+        const matchesFilter =
+            state.filter === "all" ||
+            product.category === state.filter ||
+            product.subCategory === state.filter;
+
+        const haystack = [
+            product.title,
+            product.shortDesc,
+            product.fullDesc,
+            product.category,
+            product.subCategory,
+            ...(product.technologies || [])
+        ].join(" ").toLowerCase();
+
+        return matchesFilter && (!query || haystack.includes(query));
+    });
+}
+
 function renderProducts(itemsToDisplay) {
-    const grid = document.getElementById('products-grid');
+    const grid = $("#products-grid");
+    const resultCount = $("#results-count");
     if (!grid) return;
 
-    if (itemsToDisplay.length === 0) {
+    if (resultCount) {
+        resultCount.textContent = `${itemsToDisplay.length} ${itemsToDisplay.length === 1 ? "product" : "products"}`;
+    }
+
+    if (!itemsToDisplay.length) {
         grid.innerHTML = `
-            <div class="col-span-full text-center py-12 text-slate-500">
-                <i class="fa-solid fa-box-open text-4xl mb-3"></i>
-                <p class="text-base font-semibold">No products found matching your search.</p>
+            <div class="empty-state">
+                <img src="assets/radar.svg" alt="">
+                <p>No products found matching your search or filter.</p>
             </div>
         `;
         return;
     }
 
     grid.innerHTML = itemsToDisplay.map(product => {
-        const mainImage = (product.images && product.images.length > 0) ? product.images[0] : (product.image || 'logo_darkmode.png');
+        const mainImage = product.images?.[0] || product.image || "logo_darkmode.png";
 
         return `
-            <div onclick="window.location.href='product.html?id=${product.id}'" class="product-card group cursor-pointer">
-                <div class="card-image-container h-52 bg-slate-950/80 relative flex items-center justify-center border-b border-slate-800/60 overflow-hidden">
-                    <span class="absolute top-3 right-3 z-10 bg-slate-900/90 border border-cyan-500/40 text-cyan-400 text-[10px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md shadow-md">
-                        ${product.badge}
-                    </span>
-                    <img src="${mainImage}" alt="${product.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='logo_darkmode.png'">
+            <article class="product-card reveal visible" data-product-id="${escapeHtml(product.id)}" tabindex="0">
+                <div class="card-image-container">
+                    <span class="product-badge">${escapeHtml(product.badge || "Digital Product")}</span>
+                    <img src="${escapeHtml(mainImage)}"
+                         alt="${escapeHtml(product.title)}"
+                         loading="lazy"
+                         onerror="this.onerror=null;this.src='logo_darkmode.png';this.classList.add('card-fallback');">
                 </div>
-                <div class="p-6 flex flex-col flex-grow">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs uppercase font-bold tracking-wider text-slate-500">${product.subCategory}</span>
-                        <span class="text-cyan-400 font-extrabold text-lg">${product.price}</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">${product.title}</h3>
-                    <p class="text-slate-400 text-sm mb-6 flex-grow leading-relaxed">${product.shortDesc}</p>
-                    
-                    <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                        <span class="text-cyan-400 font-bold text-xs flex items-center gap-1.5 group-hover:translate-x-1 transition-transform">
-                            Details <i class="fa-solid fa-arrow-right"></i>
-                        </span>
 
-                        <!-- زر Live Demo يظهر فقط لو المنتج Web Template ولديه demoLink -->
+                <div class="product-content">
+                    <div class="product-top">
+                        <span class="product-category">${escapeHtml(product.subCategory || product.category)}</span>
+                        <span class="product-price">${escapeHtml(product.price || "—")}</span>
+                    </div>
+
+                    <h3>${escapeHtml(product.title)}</h3>
+                    <p>${escapeHtml(product.shortDesc || "")}</p>
+
+                    <div class="product-footer">
+                        <span class="details-link">View Details <i class="fa-solid fa-arrow-right"></i></span>
                         ${product.demoLink ? `
-                            <a href="${product.demoLink}" target="_blank" onclick="event.stopPropagation()" class="bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 text-slate-200 text-xs font-bold px-3 py-1.5 rounded-lg transition-all border border-slate-700 flex items-center gap-1.5">
-                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Live Demo
+                            <a class="demo-link" href="${escapeHtml(product.demoLink)}" target="_blank" rel="noopener" data-stop-card>
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
                             </a>
-                        ` : ''}
+                        ` : ""}
                     </div>
                 </div>
-            </div>
+            </article>
         `;
-    }).join('');
-}
+    }).join("");
 
-// دالة نسخ الكود البرمجي من الـ CLI
-function copyCodeSnippet(button) {
-    const parent = button.closest('.relative');
-    const codeBlock = parent.querySelector('.code-block');
-    if (!codeBlock) return;
+    $$(".product-card").forEach(card => {
+        card.addEventListener("click", event => {
+            if (event.target.closest("[data-stop-card]")) return;
+            const id = card.dataset.productId;
+            window.location.href = `product.html?id=${encodeURIComponent(id)}`;
+        });
 
-    const textToCopy = Array.from(codeBlock.querySelectorAll('p'))
-        .map(p => p.innerText)
-        .filter(text => !text.startsWith('#'))
-        .join('\n');
-
-    navigator.clipboard.writeText(textToCopy).then(() => {
-        const originalText = button.innerHTML;
-        button.innerHTML = `<i class="fa-solid fa-check text-cyan-400"></i> Copied!`;
-        button.classList.add('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/40');
-        
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.classList.remove('bg-cyan-500/20', 'text-cyan-400', 'border-cyan-500/40');
-        }, 2000);
+        card.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                window.location.href = `product.html?id=${encodeURIComponent(card.dataset.productId)}`;
+            }
+        });
     });
 }
 
-// دالة عرض الـ FAQ
+function updateFilters() {
+    $$(".filter-btn").forEach(button => {
+        const active = button.dataset.filter === state.filter;
+        button.classList.toggle("active", active);
+    });
+    renderProducts(getFilteredProducts());
+}
+
 function renderFaqs() {
-    const container = document.getElementById('faq-container');
+    const container = $("#faq-container");
     if (!container) return;
 
     container.innerHTML = faqs.map((faq, index) => `
-        <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm transition-all">
-            <button onclick="toggleFaq(${index})" class="w-full px-6 py-4 text-left font-bold text-white flex justify-between items-center hover:text-cyan-400 transition-colors">
-                <span>${faq.q}</span>
-                <i id="faq-icon-${index}" class="fa-solid fa-chevron-down text-sm text-slate-500 transition-transform"></i>
+        <article class="faq-item ${index === 0 ? "open" : ""}">
+            <button class="faq-question" type="button" aria-expanded="${index === 0}" data-faq="${index}">
+                <span>${escapeHtml(faq.q)}</span>
+                <i class="fa-solid fa-chevron-down"></i>
             </button>
-            <div id="faq-content-${index}" class="hidden px-6 pb-4 text-slate-400 text-sm leading-relaxed border-t border-slate-800/40 pt-3">
-                ${faq.a}
-            </div>
-        </div>
-    `).join('');
-}
+            <div class="faq-answer">${escapeHtml(faq.a)}</div>
+        </article>
+    `).join("");
 
-function toggleFaq(index) {
-    const content = document.getElementById(`faq-content-${index}`);
-    const icon = document.getElementById(`faq-icon-${index}`);
-    if (content.classList.contains('hidden')) {
-        content.classList.remove('hidden');
-        icon.style.transform = 'rotate(180deg)';
-    } else {
-        content.classList.add('hidden');
-        icon.style.transform = 'rotate(0deg)';
-    }
-}
+    $$(".faq-question", container).forEach(button => {
+        button.addEventListener("click", () => {
+            const item = button.closest(".faq-item");
+            const isOpen = item.classList.contains("open");
 
-// التهيئة والتشغيل
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof products !== 'undefined') {
-        renderProducts(products);
-    }
-    renderFaqs();
-
-    // فلترة المنتجات
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterButtons.forEach(b => {
-                b.classList.remove('active', 'bg-cyan-500', 'text-white', 'shadow-md');
-                b.classList.add('bg-slate-950', 'text-slate-300', 'border', 'border-slate-800');
+            $$(".faq-item", container).forEach(other => {
+                other.classList.remove("open");
+                $(".faq-question", other)?.setAttribute("aria-expanded", "false");
             });
-            btn.classList.add('active', 'bg-cyan-500', 'text-white', 'shadow-md');
-            btn.classList.remove('bg-slate-950', 'text-slate-300', 'border', 'border-slate-800');
 
-            const filterValue = btn.getAttribute('data-filter');
-            if (filterValue === 'all') {
-                renderProducts(products);
-            } else {
-                const filtered = products.filter(p => p.category === filterValue || p.subCategory === filterValue);
-                renderProducts(filtered);
+            if (!isOpen) {
+                item.classList.add("open");
+                button.setAttribute("aria-expanded", "true");
             }
         });
     });
+}
 
-    // البحث اللحظي
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            const filtered = products.filter(p => 
-                p.title.toLowerCase().includes(query) || 
-                p.shortDesc.toLowerCase().includes(query) || 
-                p.subCategory.toLowerCase().includes(query)
-            );
-            renderProducts(filtered);
+function renderShowcase() {
+    const track = $("#showcase-track");
+    const dots = $("#slider-dots");
+    const slider = $("#showcase-slider");
+    if (!track || !dots || !slider || !products?.length) return;
+
+    const showcaseProducts = products.slice(0, Math.min(products.length, 5));
+
+    track.innerHTML = showcaseProducts.map((product, index) => {
+        const image = product.images?.[0] || product.image || "logo_darkmode.png";
+        return `
+            <article class="showcase-slide">
+                <div>
+                    <span class="slide-index">PRODUCT / ${String(index + 1).padStart(2, "0")}</span>
+                    <span class="slide-category">${escapeHtml(product.category)} · ${escapeHtml(product.subCategory)}</span>
+                    <h3>${escapeHtml(product.title)}</h3>
+                    <p>${escapeHtml(product.shortDesc || "")}</p>
+                    <div class="slide-actions">
+                        <a href="product.html?id=${encodeURIComponent(product.id)}" class="primary-button">
+                            View Product <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        ${product.demoLink ? `
+                            <a href="${escapeHtml(product.demoLink)}" target="_blank" rel="noopener" class="secondary-button">
+                                Live Demo <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        ` : ""}
+                    </div>
+                </div>
+                <div class="slide-visual">
+                    <span class="slide-price">${escapeHtml(product.price || "Digital")}</span>
+                    <img src="${escapeHtml(image)}" alt="${escapeHtml(product.title)}"
+                         onerror="this.onerror=null;this.src='logo_darkmode.png';">
+                </div>
+            </article>
+        `;
+    }).join("");
+
+    dots.innerHTML = showcaseProducts.map((_, index) =>
+        `<button class="slider-dot ${index === 0 ? "active" : ""}" data-slide="${index}" aria-label="Go to slide ${index + 1}"></button>`
+    ).join("");
+
+    $$(".slider-dot").forEach(dot => {
+        dot.addEventListener("click", () => {
+            goToSlide(Number(dot.dataset.slide));
+            restartAutoplay();
         });
+    });
+
+    updateSlider();
+}
+
+function updateSlider() {
+    const track = $("#showcase-track");
+    if (!track) return;
+
+    const count = track.children.length;
+    if (!count) return;
+
+    state.slide = (state.slide + count) % count;
+    track.style.transform = `translateX(-${state.slide * 100}%)`;
+
+    $$(".slider-dot").forEach((dot, index) => {
+        dot.classList.toggle("active", index === state.slide);
+    });
+}
+
+function goToSlide(index) {
+    state.slide = index;
+    updateSlider();
+}
+
+function nextSlide() {
+    state.slide += 1;
+    updateSlider();
+}
+
+function previousSlide() {
+    state.slide -= 1;
+    updateSlider();
+}
+
+function startAutoplay() {
+    clearInterval(state.autoplayTimer);
+    if (!state.autoplay) return;
+
+    state.autoplayTimer = setInterval(nextSlide, 5000);
+}
+
+function restartAutoplay() {
+    startAutoplay();
+}
+
+function setupSlider() {
+    $("#slider-next")?.addEventListener("click", () => {
+        nextSlide();
+        restartAutoplay();
+    });
+
+    $("#slider-prev")?.addEventListener("click", () => {
+        previousSlide();
+        restartAutoplay();
+    });
+
+    $("#autoplay-toggle")?.addEventListener("click", () => {
+        state.autoplay = !state.autoplay;
+        const icon = $("#autoplay-toggle i");
+
+        if (state.autoplay) {
+            icon.className = "fa-solid fa-pause";
+            startAutoplay();
+        } else {
+            clearInterval(state.autoplayTimer);
+            icon.className = "fa-solid fa-play";
+        }
+    });
+
+    const slider = $("#showcase-slider");
+    slider?.addEventListener("mouseenter", () => clearInterval(state.autoplayTimer));
+    slider?.addEventListener("mouseleave", startAutoplay);
+    slider?.addEventListener("touchstart", () => clearInterval(state.autoplayTimer), { passive: true });
+    slider?.addEventListener("touchend", startAutoplay, { passive: true });
+
+    startAutoplay();
+}
+
+function openQuickView(product) {
+    const modal = $("#product-modal");
+    const body = $("#modal-body");
+    if (!modal || !body) return;
+
+    body.innerHTML = `
+        <span class="modal-badge">${escapeHtml(product.badge || "Digital Product")}</span>
+        <h2>${escapeHtml(product.title)}</h2>
+        <p>${escapeHtml(product.fullDesc || product.shortDesc || "")}</p>
+
+        <div class="modal-features">
+            ${(product.features || []).slice(0, 5).map(feature => `
+                <div class="modal-feature">
+                    <img src="assets/circle-check.svg" alt="">
+                    <span>${escapeHtml(feature)}</span>
+                </div>
+            `).join("")}
+        </div>
+
+        <div class="modal-actions">
+            <a href="product.html?id=${encodeURIComponent(product.id)}" class="primary-button">
+                Open Product <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            ${product.demoLink ? `
+                <a href="${escapeHtml(product.demoLink)}" target="_blank" rel="noopener" class="secondary-button">
+                    Live Demo
+                </a>
+            ` : ""}
+        </div>
+    `;
+
+    modal.classList.add("active");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+}
+
+function closeQuickView() {
+    const modal = $("#product-modal");
+    if (!modal) return;
+    modal.classList.remove("active");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+}
+
+function setupModal() {
+    $("#close-modal-btn")?.addEventListener("click", closeQuickView);
+    $("#modal-backdrop")?.addEventListener("click", closeQuickView);
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") closeQuickView();
+    });
+}
+
+function setupSearch() {
+    const input = $("#search-input");
+    if (!input) return;
+
+    input.addEventListener("input", event => {
+        state.query = event.target.value.trim();
+        renderProducts(getFilteredProducts());
+    });
+
+    document.addEventListener("keydown", event => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+            event.preventDefault();
+            input.focus();
+        }
+    });
+}
+
+function setupFilters() {
+    $$(".filter-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            state.filter = button.dataset.filter || "all";
+            updateFilters();
+        });
+    });
+}
+
+function setupMobileMenu() {
+    const button = $("#mobile-menu-button");
+    const menu = $("#mobile-nav");
+    if (!button || !menu) return;
+
+    button.addEventListener("click", () => {
+        const open = menu.classList.toggle("open");
+        button.setAttribute("aria-expanded", String(open));
+        button.innerHTML = open
+            ? '<i class="fa-solid fa-xmark"></i>'
+            : '<i class="fa-solid fa-bars"></i>';
+    });
+
+    $$("#mobile-nav a").forEach(link => {
+        link.addEventListener("click", () => {
+            menu.classList.remove("open");
+            button.setAttribute("aria-expanded", "false");
+            button.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        });
+    });
+}
+
+function setupBackToTop() {
+    const button = $("#back-to-top");
+    if (!button) return;
+
+    window.addEventListener("scroll", () => {
+        button.classList.toggle("visible", window.scrollY > 450);
+    }, { passive: true });
+
+    button.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+}
+
+function setupReveal() {
+    const items = $$(".reveal");
+    if (!("IntersectionObserver" in window)) {
+        items.forEach(item => item.classList.add("visible"));
+        return;
     }
 
-    // زر العودة للأعلى
-    const backToTopBtn = document.getElementById('back-to-top');
-    if (backToTopBtn) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
-            } else {
-                backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
             }
         });
+    }, { threshold: .12 });
 
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+    items.forEach(item => observer.observe(item));
+}
+
+function updateProductCount() {
+    const count = $("#product-count");
+    if (count && typeof products !== "undefined") count.textContent = products.length;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof products === "undefined") {
+        console.error("EEPX Labs: products.js could not be loaded.");
+        return;
     }
+
+    updateProductCount();
+    renderProducts(products);
+    renderFaqs();
+    renderShowcase();
+
+    setupSlider();
+    setupSearch();
+    setupFilters();
+    setupModal();
+    setupMobileMenu();
+    setupBackToTop();
+    setupReveal();
 });

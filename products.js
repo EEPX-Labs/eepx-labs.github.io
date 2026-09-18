@@ -2,7 +2,7 @@
 const products = [
     {
         id: "eagle-fortify-tool",
-        title: "Eagle Fortify Tool",
+        title: "Eagle Fortify Tool - Local Password & Security Utility",
         category: "software",
         subCategory: "security",
         price: "$5",
@@ -38,14 +38,14 @@ const products = [
                 </div>
             </div>
         `,
-        downloadLink: "https://eagleeyeprim.gumroad.com/l/EagleFortifyTool?wanted=true",
+        downloadLink: "#",
     },
     {
         id: "aurora-saas",
         title: "Aurora - Premium SaaS Landing Page Template",
         category: "templates",
         subCategory: "web",
-        price: "$15",
+        price: "$29",
         badge: "Best Seller",
         images: [
             "images/AURORA SaaS Showcase.png"
@@ -70,15 +70,15 @@ const products = [
             "CSS3",
             "JavaScript (ES6)"
         ],
-        downloadLink: "https://eagleeyeprim.gumroad.com/l/aurora-html-template?wanted=true",
-        demoLink: "https://aurora-saas.vercel.app/",
+        downloadLink: "#",
+        demoLink: "https://your-demo-link.com",
     },
         {
         id: "nexora-digital-agency-template",
         title: "NEXORA - Premium Digital Agency HTML Template",
         category: "templates",
         subCategory: "web",
-        price: "$15",
+        price: "$29",
         badge: "Best Seller",
         images: [
             "images/Nexora Digital Agency Showcase.png"
@@ -113,7 +113,7 @@ const products = [
                 </div>
             </div>
         `,
-        downloadLink: "https://eagleeyeprim.gumroad.com/l/nexora-html-template?wanted=true",
-        demoLink: "https://nexora-digital-agency-chi.vercel.app/",
+        downloadLink: "#",
+        demoLink: "https://your-demo-link.com",
     }
 ];
